@@ -1,0 +1,68 @@
+.episode-tabs {
+  margin-bottom: 20px;
+}
+
+.episode-tabs h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background-color: #f0f0f0;
+}
+
+.tab.active {
+  border-color: #2196F3;
+  background-color: #E3F2FD;
+  color: #1976D2;
+}
+
+.tab.complete {
+  border-color: #4CAF50;
+  background-color: #E8F5E9;
+}
+
+.tab.complete.active {
+  border-color: #2196F3;
+  background-color: #E3F2FD;
+}
+
+.next-episode-button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.next-episode-button:hover {
+  background-color: #45a049;
+  transform: scale(1.02);
+}
+
+.next-episode-button:active {
+  transform: scale(0.98);
+}
