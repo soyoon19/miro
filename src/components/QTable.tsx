@@ -27,33 +27,33 @@ export default function QTable({
 }: QTableProps) {
   // rows는 이미 현재 에피소드의 행만 포함 (App.tsx에서 필터링됨)
   const episodeRows = rows;
-  
+
   // 탈출 성공한 step 찾기 (reward === 10인 마지막 행)
-  const exitRow = isExitReached 
+  const exitRow = isExitReached
     ? episodeRows.find((row) => row.reward === 10) || episodeRows[episodeRows.length - 1]
     : null;
-  
+
   // 현재 step의 행 찾기 (현재 에피소드이고 현재 step인 경우)
   // 탈출 성공 시에는 탈출 성공한 step의 입력을 받을 수 있도록 함
   const currentRow = isExitReached && exitRow
     ? exitRow
     : episodeRows.find(
-        (row) => row.episode === currentEpisode && row.step === currentStep
-      );
-  
+      (row) => row.episode === currentEpisode && row.step === currentStep
+    );
+
   // 표시할 에피소드 번호 (rows에서 가져오거나 currentEpisode 사용)
   const displayEpisode = rows.length > 0 ? rows[0].episode : currentEpisode;
-  
+
   return (
     <div className="qtable-container">
       <h2>Q-Table (에피소드 {displayEpisode})</h2>
-      
+
       {!canProceed && currentRow && (
         <div className="warning-message">
           ⚠️ 탐험가 의견 반영 여부와 정책 판단을 모두 선택해야 다음 단계로 진행할 수 있습니다.
         </div>
       )}
-      
+
       <div className="table-wrapper">
         <table className="qtable">
           <thead>
@@ -76,9 +76,9 @@ export default function QTable({
               const isCurrentRow = isExitReached && exitRow
                 ? row.step === exitRow.step && row.episode === exitRow.episode
                 : row.episode === currentEpisode && row.step === currentStep;
-              
+
               return (
-                <tr key={index} className={isCurrentRow ? 'current-row' : ''}>
+                <tr key={index} className={isCurrentRow ? 'current-row' : ''} data-tutorial-qtable-row={isCurrentRow ? 'current' : undefined}>
                   <td>{row.episode} / {row.step}</td>
                   <td>{row.state}</td>
                   <td>{row.action}</td>
@@ -103,6 +103,7 @@ export default function QTable({
                           )
                         }
                         className="select-box"
+                        data-tutorial-id="opinion-select"
                       >
                         <option value="">선택</option>
                         <option value="O">O</option>
@@ -126,6 +127,7 @@ export default function QTable({
                           )
                         }
                         className="select-box"
+                        data-tutorial-id="policy-select"
                       >
                         <option value="">선택</option>
                         <option value="좋은 정책">좋은 정책</option>

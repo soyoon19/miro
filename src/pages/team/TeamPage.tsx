@@ -128,7 +128,7 @@ const TeamPage = () => {
                 );
             case 1: // 팀 정보 입력
                 return (
-                    <Card title="2. 팀 정보 입력">
+                    <Card title="2. 역할 분담">
                         <div>
                             <div style={{ marginBottom: '20px' }}>
                                 <label style={labelStyle}>팀 이름</label>
@@ -249,8 +249,8 @@ const TeamPage = () => {
     };
 
     const getStepTitle = () => {
-        if (currentStep === 0) return "역할 분담";
-        if (currentStep === 1) return "팀 정보 설정";
+        if (currentStep === 0) return "역할 설명";
+        if (currentStep === 1) return "역할 분담";
         return "규칙 ";
     };
 
