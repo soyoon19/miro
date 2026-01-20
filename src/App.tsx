@@ -24,7 +24,7 @@ function App() {
     qTableRowsByEpisode: {}, // 에피소드별 Q-table 저장
   });
 
-  const [moveStatus, setMoveStatus] = useState<{ status: '가능' | '불가능' | null }>({ status: null });
+
   const [viewEpisode, setViewEpisode] = useState(1); // Q-Table에서 보는 에피소드
 
 
@@ -347,8 +347,6 @@ function App() {
               !canProceed ||
               isExitReached // 탈출 성공 시 행동 선택 비활성화
             }
-            isExitReached={isExitReached}
-            isMaxStepsReached={isMaxStepsReached}
           />
         </div>
 
@@ -357,8 +355,6 @@ function App() {
             currentEpisode={viewEpisode}
             onEpisodeChange={setViewEpisode}
             episodes={episodes}
-            canProceedToNext={canProceedToNextEpisode}
-            onNextEpisode={handleNextEpisode}
           />
           <QTable
             rows={gameState.qTableRowsByEpisode[viewEpisode] || []}
