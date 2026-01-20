@@ -24,8 +24,6 @@ interface PlayViewProps {
     isExitReached: boolean;
     isMaxStepsReached: boolean;
     canProceed: boolean;
-    bestEpisode: any;
-    opinionReflectionRate: number;
     isTutorial?: boolean;
 }
 
@@ -45,8 +43,6 @@ const PlayView: React.FC<PlayViewProps> = ({
     isExitReached,
     isMaxStepsReached,
     canProceed,
-    bestEpisode,
-    opinionReflectionRate,
     isTutorial = false
 }) => {
     const [toast, setToast] = React.useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -104,8 +100,6 @@ const PlayView: React.FC<PlayViewProps> = ({
                         currentEpisode={viewEpisode}
                         onEpisodeChange={setViewEpisode}
                         episodes={episodes}
-                        canProceedToNext={canProceedToNextEpisode}
-                        onNextEpisode={handleNextEpisode}
                     />
                     <div data-tutorial-id="q-table">
                         <QTable

@@ -19,7 +19,6 @@ const PathVisualization: React.FC<PathVisualizationProps> = ({ path, isSuccess }
                         // 해당 좌표의 path 정보 찾기
                         const step = path.find(p => p.y === y && p.x === x);
                         const isStart = y === 0 && x === 0;
-                        const isExit = y === 1 && x === 3;
 
                         let className = 'path-cell';
                         if (step) className += ' visited';

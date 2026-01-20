@@ -14,16 +14,12 @@ interface EpisodeTabsProps {
     isFinished: boolean;
     canProceedToNext: boolean;
   }>;
-  canProceedToNext: boolean;
-  onNextEpisode: () => void;
 }
 
 export default function EpisodeTabs({
   currentEpisode,
   onEpisodeChange,
   episodes,
-  canProceedToNext,
-  onNextEpisode,
 }: EpisodeTabsProps) {
   return (
     <div className="episode-tabs">
