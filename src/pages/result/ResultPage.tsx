@@ -45,7 +45,7 @@ const ResultPage = () => {
             title="게임 결과"
             headerContent={
                 summary.teamName ? (
-                    <div style={{ textAlign: 'center', color: '#ffffffff', marginTop: '4px' }}>
+                    <div style={{ textAlign: 'center', color: '#ffffffff', marginTop: '4px', fontWeight: 'bold' }}>
                         Team: {summary.teamName}
                     </div>
                 ) : null
