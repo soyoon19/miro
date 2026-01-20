@@ -4,7 +4,8 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Action, QTableRow, GameState, OpinionReflected, PolicyJudgment } from './types';
+import { Action, QTableRow, GameState, OpinionReflected, PolicyJudgment, MoveStatus } from './types';
+import Toast from './components/ui/Toast';
 import { MAZE_CONFIG, checkMoveValidity, calculateReward, positionToString, generatePolicyString } from './utils/gameLogic';
 import MazeGrid from './components/MazeGrid';
 import ControlPanel from './components/ControlPanel';
@@ -24,7 +25,7 @@ function App() {
     qTableRowsByEpisode: {}, // 에피소드별 Q-table 저장
   });
 
-
+  const [moveStatus, setMoveStatus] = useState<{ status: MoveStatus | null }>({ status: null });
   const [viewEpisode, setViewEpisode] = useState(1); // Q-Table에서 보는 에피소드
 
 
@@ -198,26 +199,6 @@ function App() {
   }, [gameState.qTableRowsByEpisode]);
 
   /**
-   * 다음 에피소드로 넘어가기
-   */
-  const handleNextEpisode = useCallback(() => {
-    if (gameState.currentEpisode >= MAZE_CONFIG.maxEpisodes) {
-      return;
-    }
-
-    const nextEpisode = gameState.currentEpisode + 1;
-    setGameState((prev) => ({
-      ...prev,
-      currentEpisode: nextEpisode,
-      currentPosition: MAZE_CONFIG.startPosition,
-      currentStep: 0,
-      isEpisodeComplete: false,
-    }));
-    setViewEpisode(nextEpisode);
-    setMoveStatus({ status: null });
-  }, [gameState.currentEpisode]);
-
-  /**
    * 에피소드별 최종 점수와 이동 횟수 계산
    */
   const getEpisodeStats = useCallback((episode: number): { score: number; moveCount: number } => {
@@ -282,17 +263,11 @@ function App() {
 
   // 현재 에피소드가 완료되고 입력도 완료되었는지 확인
   const currentEpisodeFinished = isEpisodeFinished(gameState.currentEpisode);
-  const currentEpisodeInputComplete = isEpisodeInputComplete(gameState.currentEpisode);
-  const canProceedToNextEpisode = currentEpisodeFinished && currentEpisodeInputComplete &&
-    gameState.currentEpisode < MAZE_CONFIG.maxEpisodes;
 
   // 탈출 성공 여부 확인 (현재 에피소드의 마지막 step이 출구 도착인지)
   const episodeRows = gameState.qTableRowsByEpisode[gameState.currentEpisode] || [];
   const lastRow = episodeRows[episodeRows.length - 1];
   const isExitReached = lastRow?.reward === 10;
-
-  // 12번 step 도달했는데 탈출하지 못한 경우 확인
-  const isMaxStepsReached = currentEpisodeFinished && !isExitReached;
 
   // 탈출 성공 시 탈출 성공한 step의 입력 완료 여부 확인
   const exitStepComplete = isExitReached && lastRow
@@ -367,6 +342,13 @@ function App() {
           />
         </div>
       </div>
+      {moveStatus.status && (
+        <Toast
+          message={moveStatus.status === '가능' ? '이동 가능합니다' : '이동할 수 없습니다'}
+          type={moveStatus.status === '가능' ? 'success' : 'error'}
+          onClose={() => setMoveStatus({ status: null })}
+        />
+      )}
     </div>
   );
 }
