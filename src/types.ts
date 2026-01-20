@@ -52,3 +52,23 @@ export interface MazeConfig {
   maxEpisodes: number; // 3
   maxStepsPerEpisode: number; // 12
 }
+
+// 결과 페이지용 타입
+export type EpisodePath = { y: number; x: number; stepIndex: number };
+
+export type EpisodeSummary = {
+  episodeIndex: number;            // 1~3
+  stepsUsed: number;               // 0~12
+  totalScoreEnd: number;           // 에피소드 종료 시 누적점수
+  success: boolean;                // 목표 도달 여부
+  path: EpisodePath[];             // 이동 경로(좌표 배열)
+};
+
+export type RunSummary = {
+  teamName?: string;
+  createdAt: string;               // ISO string
+  explorerOCount: number;          // O 선택 횟수
+  explorerTotalCount: number;      // 반영 여부 입력 총 횟수 (= 총 step 수)
+  explorerRate: number;            // 계산값(0~1)
+  episodes: EpisodeSummary[];      // 길이 3
+};

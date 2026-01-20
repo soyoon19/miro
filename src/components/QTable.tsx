@@ -58,7 +58,7 @@ export default function QTable({
         <table className="qtable">
           <thead>
             <tr>
-              <th>에피소드/단계/Step</th>
+              <th>에피소드/단계</th>
               <th>현재 좌표</th>
               <th>선택한 행동</th>
               <th>이동 가능 여부</th>

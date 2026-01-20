@@ -6,10 +6,11 @@ import QTable from '../../components/QTable';
 import EpisodeTabs from '../../components/EpisodeTabs';
 import PageLayout from '../../components/layout/PageLayout';
 import { MAZE_CONFIG } from '../../utils/gameLogic';
+import Toast from '../ui/Toast';
 
 interface PlayViewProps {
     gameState: any;
-    moveStatus: { status: '가능' | '불가능' | null };
+
     viewEpisode: number;
     setViewEpisode: (episode: number) => void;
     handleAction: (action: Action) => void;
@@ -30,7 +31,7 @@ interface PlayViewProps {
 
 const PlayView: React.FC<PlayViewProps> = ({
     gameState,
-    moveStatus,
+
     viewEpisode,
     setViewEpisode,
     handleAction,
@@ -48,6 +49,20 @@ const PlayView: React.FC<PlayViewProps> = ({
     opinionReflectionRate,
     isTutorial = false
 }) => {
+    const [toast, setToast] = React.useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+    React.useEffect(() => {
+        if (currentEpisodeInputComplete) {
+            if (isExitReached) {
+                setToast({ message: '탈출 성공!', type: 'success' });
+            } else if (isMaxStepsReached) {
+                setToast({ message: '탈출 실패...', type: 'error' });
+            }
+        }
+    }, [currentEpisodeInputComplete, isExitReached, isMaxStepsReached]);
+
+    const nextLabel = gameState.currentEpisode >= MAZE_CONFIG.maxEpisodes ? '결과 보기' : '다음 에피소드로 진행';
+
     return (
         <PageLayout
             title="강화학습 미로 탐험 시뮬레이터"
@@ -58,25 +73,11 @@ const PlayView: React.FC<PlayViewProps> = ({
                     <div>Total Score: {gameState.totalScore}</div>
                 </div>
             }
+            onNext={handleNextEpisode}
+            nextLabel={nextLabel}
+            nextDisabled={!canProceedToNextEpisode}
         >
-            {gameState.isGameComplete && currentEpisodeInputComplete && (
-                <div className="game-complete">
-                    <h2>🎉 게임 완료!</h2>
-                    <div className="final-stats">
-                        <p>최종 점수: {gameState.totalScore}</p>
-                        {bestEpisode && (
-                            <div className="best-episode-stats">
-                                <p className="best-episode-title">🏆 최고 점수 에피소드</p>
-                                <p>에피소드 {bestEpisode.episode}: {bestEpisode.score}점 ({bestEpisode.moveCount}회 이동)</p>
-                                <p className="best-episode-note">이동 횟수가 적으면서 점수가 높은 에피소드가 우수합니다!</p>
-                            </div>
-                        )}
-                        <p className="reflection-rate">
-                            탐험가 의견 반영률: {opinionReflectionRate}%
-                        </p>
-                    </div>
-                </div>
-            )}
+
 
             <div className="main-content" style={{ flexDirection: 'row', gap: '20px', alignItems: 'flex-start' }}>
                 <div className="left-panel">
@@ -86,7 +87,6 @@ const PlayView: React.FC<PlayViewProps> = ({
                     <div data-tutorial-id="control-panel">
                         <ControlPanel
                             onAction={handleAction}
-                            moveStatus={moveStatus.status}
                             isDisabled={
                                 !isTutorial && ( // 튜토리얼일때는 overlay에서 제어하므로 여기서는 막지 않음 (실제로는 overlay가 막음)
                                     gameState.isGameComplete ||
@@ -95,8 +95,6 @@ const PlayView: React.FC<PlayViewProps> = ({
                                     isExitReached
                                 )
                             }
-                            isExitReached={isExitReached}
-                            isMaxStepsReached={isMaxStepsReached}
                         />
                     </div>
                 </div>
@@ -122,7 +120,16 @@ const PlayView: React.FC<PlayViewProps> = ({
                     </div>
                 </div>
             </div>
-        </PageLayout>
+            {
+                toast && (
+                    <Toast
+                        message={toast.message}
+                        type={toast.type}
+                        onClose={() => setToast(null)}
+                    />
+                )
+            }
+        </PageLayout >
     );
 };
 

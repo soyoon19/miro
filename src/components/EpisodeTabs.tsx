@@ -33,23 +33,14 @@ export default function EpisodeTabs({
           <button
             key={ep.episode}
             onClick={() => onEpisodeChange(ep.episode)}
-            className={`tab ${currentEpisode === ep.episode ? 'active' : ''} ${
-              ep.isComplete ? 'complete' : ''
-            }`}
+            className={`tab ${currentEpisode === ep.episode ? 'active' : ''} ${ep.isComplete ? 'complete' : ''
+              }`}
           >
             에피소드 {ep.episode}
             {ep.isComplete && ' ✓'}
           </button>
         ))}
       </div>
-      {canProceedToNext && (
-        <button
-          onClick={onNextEpisode}
-          className="next-episode-button"
-        >
-          다음 에피소드로 진행 →
-        </button>
-      )}
     </div>
   );
 }

@@ -1,0 +1,69 @@
+.path-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.path-row {
+    display: flex;
+    gap: 4px;
+}
+
+.path-cell {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+}
+
+.path-cell.visited {
+    background-color: #e3f2fd;
+    border-color: #bbdefb;
+}
+
+.path-cell.start {
+    background-color: #fff9c4;
+    border-color: #fff59d;
+}
+
+.step-number {
+    color: #1976d2;
+}
+
+.cell-marker {
+    font-weight: 900;
+    color: #f57f17;
+}
+
+.result-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-badge.success {
+    background-color: #4caf50;
+}
+
+.result-badge.fail {
+    background-color: #f44336;
+}

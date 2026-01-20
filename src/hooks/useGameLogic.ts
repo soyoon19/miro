@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react';
-import { Action, QTableRow, GameState, OpinionReflected, PolicyJudgment } from '../types';
+import { useNavigate } from 'react-router-dom';
+import { Action, QTableRow, GameState, OpinionReflected, PolicyJudgment, EpisodeSummary, RunSummary } from '../types';
 import { MAZE_CONFIG, checkMoveValidity, calculateReward, positionToString, generatePolicyString } from '../utils/gameLogic';
 
 export const useGameLogic = () => {
+    const navigate = useNavigate();
     // 게임 상태
     const [gameState, setGameState] = useState<GameState>({
         currentPosition: MAZE_CONFIG.startPosition,
@@ -187,11 +189,68 @@ export const useGameLogic = () => {
         );
     }, [gameState.qTableRowsByEpisode]);
 
-    /**
-     * 다음 에피소드로 넘어가기
-     */
     const handleNextEpisode = useCallback(() => {
+        // 현재 에피소드가 마지막 에피소드(3)이고 완료된 경우 -> 결과 페이지로 이동
         if (gameState.currentEpisode >= MAZE_CONFIG.maxEpisodes) {
+            // 결과 데이터 생성
+            const episodesSummary: EpisodeSummary[] = [];
+            let totalExplorerOCount = 0;
+            let totalExplorerTotalCount = 0;
+
+            for (let i = 1; i <= MAZE_CONFIG.maxEpisodes; i++) {
+                const rows = gameState.qTableRowsByEpisode[i] || [];
+
+                // Path reconstruction
+                const path = rows.map((row, index) => {
+                    const [y, x] = row.state.split(',').map(Number);
+                    return { y, x, stepIndex: index };
+                });
+                // Add final position
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    const [ny, nx] = lastRow.nextState.split(',').map(Number);
+                    path.push({ y: ny, x: nx, stepIndex: rows.length });
+                }
+
+                // Stats
+                const stepsUsed = rows.length;
+                const lastRow = rows[rows.length - 1];
+                const totalScoreEnd = lastRow ? lastRow.totalScore : 0;
+                const success = lastRow ? lastRow.reward === 10 : false;
+
+                // Explorer stats
+                const oCount = rows.filter(r => r.opinionReflected === 'O').length;
+                totalExplorerOCount += oCount;
+                totalExplorerTotalCount += rows.length;
+
+                episodesSummary.push({
+                    episodeIndex: i,
+                    stepsUsed,
+                    totalScoreEnd,
+                    success,
+                    path
+                });
+            }
+
+            const explorerRate = totalExplorerTotalCount > 0
+                ? Number((totalExplorerOCount / totalExplorerTotalCount).toFixed(2))
+                : 0;
+
+            // 팀 이름 가져오기 (기존 로직 가정)
+            const teamInfoStr = localStorage.getItem('rl_maze_team_info');
+            const teamName = teamInfoStr ? JSON.parse(teamInfoStr).teamName : undefined;
+
+            const runSummary: RunSummary = {
+                teamName,
+                createdAt: new Date().toISOString(),
+                explorerOCount: totalExplorerOCount,
+                explorerTotalCount: totalExplorerTotalCount,
+                explorerRate,
+                episodes: episodesSummary
+            };
+
+            localStorage.setItem('rl_maze_run_summary', JSON.stringify(runSummary));
+            navigate('/result');
             return;
         }
 
@@ -205,7 +264,10 @@ export const useGameLogic = () => {
         }));
         setViewEpisode(nextEpisode);
         setMoveStatus({ status: null });
-    }, [gameState.currentEpisode]);
+    }, [gameState, navigate, setViewEpisode]); // Added dependencies
+
+    // ... (rest of the file)
+
 
     /**
      * 에피소드별 최종 점수와 이동 횟수 계산
@@ -266,14 +328,13 @@ export const useGameLogic = () => {
             episode: episodeNum,
             isComplete: finished && inputComplete,
             isFinished: finished,
-            canProceedToNext: finished && inputComplete && episodeNum < MAZE_CONFIG.maxEpisodes,
+            canProceedToNext: finished && inputComplete,
         };
     });
 
     const currentEpisodeFinished = isEpisodeFinished(gameState.currentEpisode);
     const currentEpisodeInputComplete = isEpisodeInputComplete(gameState.currentEpisode);
-    const canProceedToNextEpisode = currentEpisodeFinished && currentEpisodeInputComplete &&
-        gameState.currentEpisode < MAZE_CONFIG.maxEpisodes;
+    const canProceedToNextEpisode = currentEpisodeFinished && currentEpisodeInputComplete;
 
     const episodeRows = gameState.qTableRowsByEpisode[gameState.currentEpisode] || [];
     const lastRow = episodeRows[episodeRows.length - 1];
