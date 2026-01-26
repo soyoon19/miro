@@ -79,7 +79,8 @@ const TutorialPage = () => {
                 </>
             );
             showNextButton = true;
-            placement = 'top';
+            // placement = 'top';
+            placement = 'bottom';
             break;
         case 4:
             targetSelector = '[data-tutorial-id="opinion-select"]';

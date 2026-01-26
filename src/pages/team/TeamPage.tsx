@@ -199,10 +199,10 @@ const TeamPage = () => {
                     <Card title="3-1. 게임 규칙 - 기본">
                         <div>
                             <ul style={{ paddingLeft: '20px', lineHeight: '2.0', fontSize: '1.1rem' }}>
-                                <li style={{ marginBottom: '10px' }}><strong>목표:</strong> 시작 지점에서 출발하여 목표 지점(★)에 도착하세요.</li>
+                                <li style={{ marginBottom: '10px' }}><strong>목표:</strong> 시작 지점에서 출발하여 숨겨져있는 탈출 지점을 찾아 미로를 탈출해보세요.</li>
                                 <li style={{ marginBottom: '10px' }}><strong>행동(Action):</strong> 상(Up), 하(Down), 좌(Left), 우(Right) 중 하나를 선택합니다.</li>
                                 <li style={{ marginBottom: '10px' }}><strong>에피소드:</strong> 총 3번의 에피소드를 진행합니다.</li>
-                                <li><strong>종료 조건:</strong> 목표 도착(+10점) 또는 최대 12회 행동 시 종료됩니다.</li>
+                                <li><strong>에피소드 종료 조건:</strong> 탈출 성공 또는 최대 12회 행동 시 종료됩니다.</li>
                             </ul>
                         </div>
                     </Card>
@@ -233,8 +233,9 @@ const TeamPage = () => {
                     <Card title="3-3. 게임 규칙 - Turn 진행 순서">
                         <div>
                             <ol style={{ paddingLeft: '20px', lineHeight: '2.0', fontSize: '1.1rem', background: '#f9f9f9', padding: '30px', borderRadius: '8px' }}>
-                                <li style={{ marginBottom: '15px' }}><strong>정책 결정자:</strong> 탐험가 의견 + Q-Table을 보고 이동 방향 결정</li>
-                                <li style={{ marginBottom: '15px' }}><strong>환경(시스템):</strong> 미로 화면에서 화살표 버튼 클릭 → 결과(이동/점수) 확인</li>
+                                <li style={{ marginBottom: '15px' }}><strong>탐험가:</strong> 기존의 경로를 벗어나 새로운 경로로 탐험할 것을 주장</li>
+                                <li style={{ marginBottom: '15px' }}><strong>정책 결정자:</strong> 탐험가 의견과 Q-Table을 통해 이동 방향 결정</li>
+                                <li style={{ marginBottom: '15px' }}><strong>환경(시스템):</strong> 화살표 버튼 클릭 시 이동 및 점수 결과 출력</li>
                                 <li style={{ marginBottom: '15px' }}><strong>기록원:</strong> 탐험가의 의견 반영 여부와 정책 판단 결과를 협의하여 Q-Table에 결과 기록</li>
                             </ol>
                             <p style={{ textAlign: 'center', marginTop: '30px', fontWeight: 'bold', color: '#2196F3', fontSize: '1.2rem' }}>
